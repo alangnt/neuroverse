@@ -40,8 +40,8 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ activity });
 
-  } catch (error: any) {
-    console.error("Error getting an answer:", error?.message || error);
+  } catch (error: unknown) {
+    console.error("Error getting an answer:", error);
 
     return NextResponse.json(
       { error: "Error getting an answer" },
