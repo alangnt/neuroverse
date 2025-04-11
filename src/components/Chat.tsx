@@ -4,13 +4,7 @@ import { FormEvent, useState } from 'react'
 
 import { PlusCircle } from 'lucide-react'
 
-type Message = {
-    role: 'user' | 'bot'
-    message: string
-}
-
 export default function Chat() {
-    const [messages, setMessages] = useState<Message[]>([])
     const [message, setMessage] = useState<string>('');
 
     const sendMessage = async (e: FormEvent) => {

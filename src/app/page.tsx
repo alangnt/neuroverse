@@ -11,10 +11,11 @@ type Tab = {
 }
 
 export default function App() {
-  const [message, setMessage] = useState<string>('');
-  const [answer, setAnswer] = useState<string>('');
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  // const [message, setMessage] = useState<string>('');
+  // const [answer, setAnswer] = useState<string>('');
+  // const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  /*
   const sendMessage = async () => {
     setIsLoading(true);
 
@@ -38,6 +39,7 @@ export default function App() {
         setIsLoading(false);
     }
   };
+  */
 
   const [selectedTab, setSelectedTab] = useState<'chat' | 'settings'>('chat');
 
