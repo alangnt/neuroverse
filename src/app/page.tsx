@@ -11,36 +11,6 @@ type Tab = {
 }
 
 export default function App() {
-  // const [message, setMessage] = useState<string>('');
-  // const [answer, setAnswer] = useState<string>('');
-  // const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  /*
-  const sendMessage = async () => {
-    setIsLoading(true);
-
-    try {
-        const res = await fetch('/api/getClone', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message }),
-        });
-
-        setMessage('');
-
-        if (!res.ok) throw new Error('Failed to send message');
-
-        const data = await res.json();
-        setAnswer(data.activity);
-    } catch (err) {
-        console.error('Error generating activity:', err);
-        setAnswer('Something went wrong!');
-    } finally {
-        setIsLoading(false);
-    }
-  };
-  */
-
   const [selectedTab, setSelectedTab] = useState<'chat' | 'settings'>('chat');
 
   const tabs: Tab[] = [
