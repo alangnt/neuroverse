@@ -25,6 +25,8 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    const documents = await collection.find({ user: user, botName: botName }).toArray();
+
     const basePrompt = (tone: string): { model: string; messages: ChatCompletionMessageParam[] } => ({
       model: "llama3-70b-8192",
       messages: [
@@ -43,6 +45,7 @@ export async function POST(req: NextRequest) {
     9. You sometimes struggle to stay focused on foundational learning when bigger ideas are calling.
     10. You might underestimate how long it takes to master certain skills deeply, which can lead to frustration.
     
+    Here are all the history of our messages: ${documents}
     Now here's my question: ${message}`
         }
       ]

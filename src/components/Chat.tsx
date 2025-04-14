@@ -3,7 +3,8 @@
 import { FormEvent, useEffect, useState } from 'react'
 import { PlusCircle } from 'lucide-react'
 
-type Message = {
+// TODO: Separate file with the types
+export type Message = {
   name?: string;
   role: 'user' | 'bot';
   content: string;
