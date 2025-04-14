@@ -9,7 +9,7 @@ export async function GET(req: NextRequest) {
 
     const url = new URL(req.url);
     const user = url.searchParams.get('user');
-    const botName = url.searchParams.get('botName')
+    const botName = url.searchParams.get('botName');
 
     if (!user || !botName) {
       return NextResponse.json(

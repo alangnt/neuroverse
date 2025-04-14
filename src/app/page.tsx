@@ -5,13 +5,16 @@ import Chat from '@/components/Chat'
 
 import { useState } from 'react'
 
-type Tab = {
+// TODO: Export to a separate file
+export type Tab = {
   name: string;
-  value: 'chat' | 'settings';
+  value: TabValue;
 }
 
+export type TabValue = 'chat' | 'settings' | 'basicInfo' | 'interests' | 'personality' | 'other';
+
 export default function App() {
-  const [selectedTab, setSelectedTab] = useState<'chat' | 'settings'>('chat');
+  const [selectedTab, setSelectedTab] = useState<TabValue>('settings');
 
   const tabs: Tab[] = [
     {
