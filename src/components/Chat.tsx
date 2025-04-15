@@ -4,6 +4,7 @@ import { FormEvent, useEffect, useState } from 'react'
 import { PlusCircle } from 'lucide-react'
 
 import { User } from '@/types/User'
+import { Bot } from '@/types/Bot';
 
 interface Props {
   userInfo: User;
@@ -18,7 +19,7 @@ export type Message = {
 }
 
 export default function Chat({ userInfo }: Props) {
-  const personas = ['Angrio', 'Anxi', 'Ambi'];
+  const personas: Bot[] = ['Astra', 'Echo', 'Nox', 'Iris', 'Nyra', 'Mira', 'Flux'];
 
   const [message, setMessage] = useState<string>('');
   const [messages, setMessages] = useState<Message[]>([]);
@@ -109,13 +110,12 @@ export default function Chat({ userInfo }: Props) {
     }
   }
 
-  // 🧠 Top-level useEffect to fetch on load
   useEffect(() => {
     fetchMessages();
   }, [persona]);
 
   return (
-    <section className={'flex space-x-4 w-full overflow-hidden'}>
+    <section className={'flex space-x-4 w-full overflow-hidden relative'}>
       <article className='flex flex-col space-y-4 w-1/3'>
         <div className={'flex justify-between items-center space-x-4'}>
           <h3 className={'text-xl font-semibold text-gray-700'}>Your Personas</h3>
