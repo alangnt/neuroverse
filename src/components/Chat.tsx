@@ -3,6 +3,12 @@
 import { FormEvent, useEffect, useState } from 'react'
 import { PlusCircle } from 'lucide-react'
 
+import { User } from '@/types/User'
+
+interface Props {
+  userInfo: User;
+}
+
 // TODO: Separate file with the types
 export type Message = {
   name?: string;
@@ -11,7 +17,7 @@ export type Message = {
   botName?: string;
 }
 
-export default function Chat() {
+export default function Chat({ userInfo }: Props) {
   const personas = ['Angrio', 'Anxi', 'Ambi'];
 
   const [message, setMessage] = useState<string>('');
@@ -21,7 +27,7 @@ export default function Chat() {
 
   const fetchMessages = async () => {
     try {
-      const res = await fetch(`/api/messages/getMessages?user=${'Alan'}&botName=${persona}`, {
+      const res = await fetch(`/api/messages/getMessages?id=${userInfo._id}&botName=${persona}`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' }
       });
@@ -37,10 +43,10 @@ export default function Chat() {
 
   const sendMessage = async () => {
     const data = {
-      user: "Alan",
       role: "user",
       botName: persona,
       message: message,
+      userInfo
     }
 
     try {
@@ -65,10 +71,10 @@ export default function Chat() {
   const messageBot = async () => {
     try {
       const data = {
-        user: "Alan",
         role: "bot",
         botName: persona,
         message: message,
+        userInfo
       }
 
       const res = await fetch('/api/getClone', {

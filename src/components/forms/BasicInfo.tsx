@@ -1,3 +1,4 @@
+import { ObjectId } from "mongodb";
 import { Dispatch, SetStateAction, FormEvent } from "react"
 
 interface BasicInfoFormData {
@@ -8,11 +9,12 @@ interface BasicInfoFormData {
 }
 
 interface Props {
+  userId: ObjectId;
   formData: BasicInfoFormData;
   setFormData: Dispatch<SetStateAction<BasicInfoFormData>>
 }
 
-export default function BasicInfoForm({ formData, setFormData }: Props) {
+export default function BasicInfoForm({ userId, formData, setFormData }: Props) {
   const handleChange = (field: keyof BasicInfoFormData, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   }
@@ -24,10 +26,30 @@ export default function BasicInfoForm({ formData, setFormData }: Props) {
     { name: 'Occupation', value: 'occupation', placeholder: 'Your job or studies' }
   ];
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
-    console.log(formData);
+    const data = { _id: userId.toString(), ...formData }
+
+    try {
+      const response = await fetch('/api/users/infos/basicInfo', {
+				method: 'PATCH',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(data)
+			});
+
+      const result = await response.json();
+
+      if (response.ok) {
+				window.location.reload();
+			} else {
+				console.error('Error updating:', result.message);
+			}
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   return (

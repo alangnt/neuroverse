@@ -1,3 +1,4 @@
+import { ObjectId } from "mongodb";
 import { Dispatch, SetStateAction, FormEvent } from "react"
 
 interface InterestsFormData {
@@ -7,11 +8,12 @@ interface InterestsFormData {
 }
 
 interface Props {
+  userId: ObjectId;
   formData: InterestsFormData;
   setFormData: Dispatch<SetStateAction<InterestsFormData>>;
 }
 
-export default function InterestsForm({ formData, setFormData }: Props) {
+export default function InterestsForm({ userId, formData, setFormData }: Props) {
   const handleChange = (field: keyof InterestsFormData, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   }
@@ -22,12 +24,31 @@ export default function InterestsForm({ formData, setFormData }: Props) {
     { name: 'Values & Beliefs', value: 'values', placeholder: 'What principles guide your decisions?' },
   ];
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
-    console.log(formData);
-  }
+    const data = { _id: userId.toString(), ...formData }
 
+    try {
+      const response = await fetch('/api/users/infos/interests', {
+				method: 'PATCH',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(data)
+			});
+
+      const result = await response.json();
+
+      if (response.ok) {
+				window.location.reload();
+			} else {
+				console.error('Error updating:', result.message);
+			}
+    } catch (error) {
+      console.error(error);
+    }
+  }
   return (
     <form className="flex flex-col space-y-4 mt-4" onSubmit={handleSubmit}>
       {fields.map((field, idx) => (

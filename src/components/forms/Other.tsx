@@ -1,3 +1,4 @@
+import { ObjectId } from "mongodb";
 import { Dispatch, SetStateAction, FormEvent } from "react"
 
 interface OtherFormData {
@@ -5,11 +6,12 @@ interface OtherFormData {
 }
 
 interface Props {
+  userId: ObjectId;
   formData: OtherFormData;
   setFormData: Dispatch<SetStateAction<OtherFormData>>;
 }
 
-export default function OtherForm({ formData, setFormData }: Props) {
+export default function OtherForm({ userId, formData, setFormData }: Props) {
   const handleChange = (field: keyof OtherFormData, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   }
@@ -18,10 +20,30 @@ export default function OtherForm({ formData, setFormData }: Props) {
     { name: 'Notes', value: 'notes', placeholder: 'Any particular stuff you want to share?' }
   ];
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
-    console.log(formData);
+    const data = { _id: userId.toString(), ...formData }
+
+    try {
+      const response = await fetch('/api/users/infos/other', {
+				method: 'PATCH',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(data)
+			});
+
+      const result = await response.json();
+
+      if (response.ok) {
+				window.location.reload();
+			} else {
+				console.error('Error updating:', result.message);
+			}
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   return (

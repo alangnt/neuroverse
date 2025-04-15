@@ -1,3 +1,4 @@
+import { ObjectId } from "mongodb";
 import { Dispatch, SetStateAction, FormEvent } from "react"
 
 interface PersonalityFormData {
@@ -7,11 +8,12 @@ interface PersonalityFormData {
 }
 
 interface Props {
+  userId: ObjectId;
   formData: PersonalityFormData;
   setFormData: Dispatch<SetStateAction<PersonalityFormData>>;
 }
 
-export default function PersonalityForm({ formData, setFormData }: Props) {
+export default function PersonalityForm({ userId, formData, setFormData }: Props) {
   const handleChange = (field: keyof PersonalityFormData, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   }
@@ -22,10 +24,30 @@ export default function PersonalityForm({ formData, setFormData }: Props) {
     { name: 'Weaknesses or Areas to Improve', value: 'weaknesses', placeholder: 'What would you like to improve about yourself?' },
   ];
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
-    console.log(formData);
+    const data = { _id: userId.toString(), ...formData }
+
+    try {
+      const response = await fetch('/api/users/infos/personality', {
+				method: 'PATCH',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(data)
+			});
+
+      const result = await response.json();
+
+      if (response.ok) {
+				window.location.reload();
+			} else {
+				console.error('Error updating:', result.message);
+			}
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   return (

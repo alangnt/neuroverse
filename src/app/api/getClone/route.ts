@@ -2,6 +2,8 @@ import { NextResponse, NextRequest } from 'next/server';
 import clientPromise from "@/lib/mongodb";
 import Groq from 'groq-sdk';
 import type { ChatCompletionMessageParam } from 'groq-sdk/resources/chat/completions';
+import { ObjectId } from 'mongodb';
+import { User } from '@/types/User';
 
 export async function POST(req: NextRequest) {
   const groq = new Groq({ apiKey: process.env.GROQ_API_KEY || '' });
@@ -11,21 +13,27 @@ export async function POST(req: NextRequest) {
     const db = client.db("neuroverse");
     const collection = db.collection("messages");
 
-    const { user, role, botName, message }: {
-      user: string;
+    const data: {
       role: 'user' | 'bot';
       botName: string;
       message: string;
+      userInfo: User;
     } = await req.json();
+    
+    const { role, botName, message, userInfo } = data;
 
-    if (!user || !role || !botName || !message) {
+    if (!role || !botName || !message) {
       return NextResponse.json(
         { message: "All fields are required" },
         { status: 400 }
       );
     }
 
-    const documents = await collection.find({ user: user, botName: botName }).toArray();
+    console.log(data)
+
+    const objectId = new ObjectId(userInfo._id);
+
+    const documents = await collection.find({ user: objectId, botName: botName }).toArray();
 
     const basePrompt = (tone: string): { model: string; messages: ChatCompletionMessageParam[] } => ({
       model: "llama3-70b-8192",
@@ -33,19 +41,8 @@ export async function POST(req: NextRequest) {
         {
           role: "user",
           content: `You are now ${botName}, my own personal clone assistant and you'll answer all my questions like you were the ${tone} part of my emotions. Don't make the answers too long.
-    Here are 10 things to know about us:
-    1. You're Alan, an incredibly ambitious and visionary person, constantly dreaming up projects that blend tech, science, and creativity.
-    2. You have a natural talent for storytelling and know how to pitch ideas in a way that gets people excited.
-    3. Your passion for learning, especially in fields like quantum computing and web development, is unmatched.
-    4. You thrive in hackathon environments and have a knack for rallying people around a shared goal.
-    5. You're deeply driven by purpose and long-term goals, which makes you resilient even when things get tough.
-    6. You sometimes start too many projects at once, which can lead to burnout or unfinished work.
-    7. Your ambitions can occasionally overshadow the need for smaller, consistent wins.
-    8. You tend to overthink or hesitate when making decisions, especially when perfectionism kicks in.
-    9. You sometimes struggle to stay focused on foundational learning when bigger ideas are calling.
-    10. You might underestimate how long it takes to master certain skills deeply, which can lead to frustration.
-    
-    Here are all the history of our messages: ${documents}
+    Here is everything to know about me: ${JSON.stringify(userInfo, null, 2)}
+    Here is the entire history of our messages in order: ${JSON.stringify(documents, null, 2)}
     Now here's my question: ${message}`
         }
       ]
@@ -72,9 +69,9 @@ export async function POST(req: NextRequest) {
     }
 
     const newMessage = {
-      user: user,
-      botName: selectedPersona!.name,
+      user: objectId,
       role: role,
+      botName: selectedPersona!.name,
       content: botReply,
       addedAt: new Date()
     };
@@ -91,9 +88,8 @@ export async function POST(req: NextRequest) {
       { status: 201 }
     );
   } catch (error) {
-    console.error("Error getting an answer:", error);
     return NextResponse.json(
-      { error: "Error getting an answer" },
+      { message: "Error getting an answer", error },
       { status: 500 }
     );
   }

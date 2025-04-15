@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import clientPromise from "@/lib/mongodb";
+import { ObjectId } from 'mongodb';
+import { User } from '@/types/User';
 
 export async function POST(req: NextRequest) {
   try {
@@ -7,23 +9,27 @@ export async function POST(req: NextRequest) {
     const db = client.db("neuroverse");
     const collection = db.collection("messages");
 
-    const { user, role, botName, message }: {
-      user: string;
+    const data: {
       role: 'user' | 'bot';
-			botName: string;
+      botName: string;
       message: string;
+      userInfo: User;
     } = await req.json();
+    
+    const { role, botName, message, userInfo } = data;
 
-    if (!user || !role || !botName || !message) {
+    if (!role || !botName || !message) {
       return NextResponse.json(
         { message: "All fields are required" },
         { status: 400 }
       );
     }
 
+    const objectId = new ObjectId(userInfo._id);
+
     const newMessage = {
-      user,
-      role,
+      user: objectId,
+      role: role,
 			botName: botName,
       content: message,
       addedAt: new Date(),
@@ -36,7 +42,6 @@ export async function POST(req: NextRequest) {
       { status: 201 }
     );
   } catch (error) {
-    console.error("Error adding message:", error);
     return NextResponse.json(
       { message: "Failed to add a message", error },
       { status: 500 }

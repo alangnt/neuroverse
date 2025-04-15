@@ -8,7 +8,13 @@ import InterestsForm from './forms/Interests';
 import PersonalityForm from './forms/Personality';
 import OtherForm from './forms/Other';
 
-export default function Settings() {
+import { User } from '@/types/User'
+
+interface Props {
+  userInfo: User;
+}
+
+export default function Settings({ userInfo }: Props) {
   const [selectedTab, setSelectedTab] = useState<TabValue>('basicInfo');
   
     const tabs: Tab[] = [
@@ -18,10 +24,10 @@ export default function Settings() {
       { name: 'Other', value: 'other' }
     ]
 
-    const [basicInfo, setBasicInfo] = useState({ name: '', age: '', location: '', occupation: '' });
-    const [interests, setInterests] = useState({ hobbies: '', goals: '', values: '' });
-    const [personality, setPersonality] = useState({ personality: '', strengths: '', weaknesses: '' });
-    const [other, setOther] = useState({ notes: '' });
+    const [basicInfo, setBasicInfo] = useState({ name: userInfo.name || '', age: userInfo.age || '', location: userInfo.location || '', occupation: userInfo.occupation || '' });
+    const [interests, setInterests] = useState({ hobbies: userInfo.hobbies || '', goals: userInfo.goals || '', values: userInfo.values || '' });
+    const [personality, setPersonality] = useState({ personality: userInfo.personality || '', strengths: userInfo.strengths || '', weaknesses: userInfo.weaknesses || '' });
+    const [other, setOther] = useState({ notes: userInfo.notes || '' });
 
   return (
     <section className={'flex flex-col space-y-4 w-full overflow-hidden border rounded border-gray-200 p-4'}>
@@ -44,16 +50,16 @@ export default function Settings() {
 
       {/* Render the appropriate form */}
       {selectedTab === 'basicInfo' && (
-        <BasicInfoForm formData={basicInfo} setFormData={setBasicInfo} />
+        <BasicInfoForm userId={userInfo._id} formData={basicInfo} setFormData={setBasicInfo} />
       )}
       {selectedTab === 'interests' && (
-        <InterestsForm formData={interests} setFormData={setInterests} />
+        <InterestsForm userId={userInfo._id} formData={interests} setFormData={setInterests} />
       )}
       {selectedTab === 'personality' && (
-        <PersonalityForm formData={personality} setFormData={setPersonality} />
+        <PersonalityForm userId={userInfo._id} formData={personality} setFormData={setPersonality} />
       )}
       {selectedTab === 'other' && (
-        <OtherForm formData={other} setFormData={setOther} />
+        <OtherForm userId={userInfo._id} formData={other} setFormData={setOther} />
       )}
     </section>
   )
