@@ -30,10 +30,12 @@ export async function POST(req: NextRequest) {
 		};
 		
 		const result = await collection.insertOne(newUser);
+
+		// Then fetch data again
+		const fetchUser = await collection.findOne({ email: email });
 		
 		return NextResponse.json(
-			{ message: "User created successfully", documentId: result.insertedId },
-			{ status: 201 }
+			{ message: "User already existing", data: fetchUser },
 		);
 	} catch (error) {
 		return NextResponse.json(

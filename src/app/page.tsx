@@ -4,9 +4,9 @@ import Settings from '@/components/Settings'
 import Chat from '@/components/Chat'
 
 import { useState, useEffect } from 'react'
-import { useSession, signOut } from "next-auth/react";
+import { useSession, signIn, signOut } from "next-auth/react";
 
-import { Github } from 'lucide-react'
+import { ChevronLeft, Github } from 'lucide-react'
 
 import { User } from '@/types/User';
 import LandingPage from '@/components/LandingPage';
@@ -17,12 +17,14 @@ export type Tab = {
   value: TabValue;
 }
 
-export type TabValue = 'chat' | 'settings' | 'basicInfo' | 'interests' | 'personality' | 'other';
+export type TabValue = 'landing' | 'chat' | 'settings' | 'basicInfo' | 'interests' | 'personality' | 'other';
 
 export default function App() {
   const {data: session, status} = useSession();
 
-  const [selectedTab, setSelectedTab] = useState<TabValue>('chat');
+  const [publicUser, setPublicUser] = useState<string>('');
+
+  const [selectedTab, setSelectedTab] = useState<TabValue>('landing');
 
   const tabs: Tab[] = [
     {
@@ -38,7 +40,13 @@ export default function App() {
   const [userInfo, setUserInfo] = useState<User | null>(null);
 
   const fetchUserProfile = async () => {
-		const data = { name: session?.user?.name, email: session?.user?.email, image: session?.user?.image };
+    let data;
+
+    if (!session) {
+      data = { email: publicUser }
+    } else {
+      data = { name: session?.user?.name, email: session?.user?.email, image: session?.user?.image };
+    }
 		
 		const response = await fetch("/api/users/getUser", {
 			method: "POST",
@@ -58,20 +66,39 @@ export default function App() {
 	}
 
   useEffect(() => {
-		if (status === "authenticated") {
-			fetchUserProfile();
-		}
-	}, [status]);
+    if (!session) {
+      const stored = localStorage.getItem("guestEmail");
+      if (stored) {
+        setPublicUser(stored);
+      } else {
+        const id = Math.floor(Math.random() * 900000000000000 + 100000000000000);
+        const email = `guest-${id}@neuroverse.ai`;
+        localStorage.setItem("guestEmail", email);
+        setPublicUser(email);
+      }
+    }
+  
+    fetchUserProfile();
+  }, [status]);
 
   return (
     <>
       <header className={'flex flex-col items-center justify-center bg-background p-2 relative max-md:sticky max-md:top-0 z-10 border-b border-gray-200'}>
+        {selectedTab !== 'landing' && (
+          <button 
+          className={'flex items-center gap-2 w-fit border rounded border-gray-200 p-2 cursor-pointer bg-gray-100 text-gray-50 hover:bg-gray-50 transition-all duration-150 md:absolute left-2 md:top-2'}
+          onClick={() => setSelectedTab('landing')}
+          >
+          <ChevronLeft className={'w-4 h-4 text-black'} />
+          </button>
+        )}
+       
         <h1 className={'text-4xl font-bold text-gray-800'}>NeuroVerse</h1>
-        {status === 'authenticated' ? (
+        {status === 'authenticated' && (
           <p className={'max-md:hidden'}>Speak with your own AI clones</p>
-        ) : null}
+        )}
 
-        {status === 'authenticated' ? (
+        {status === 'authenticated' && (
           <button 
             className={'flex items-center gap-2 w-fit border rounded border-gray-200 px-3 py-2 cursor-pointer bg-gray-900 text-gray-50 hover:bg-gray-800 transition-all duration-150 md:absolute right-2 md:top-2'}
             onClick={async () => { await signOut(); }}
@@ -79,10 +106,20 @@ export default function App() {
             <Github className={'w-4 h-4'} />
             Sign Out
           </button>
-        ) : null}
+        )}
+
+        {status === 'unauthenticated' && selectedTab !== 'landing' && (
+          <button 
+            className={'flex items-center gap-2 w-fit border rounded border-gray-200 px-3 py-2 cursor-pointer bg-gray-900 text-gray-50 hover:bg-gray-800 transition-all duration-150 md:absolute right-2 md:top-2'}
+            onClick={async () => { await signIn(); }}
+          >
+            <Github className={'w-4 h-4'} />
+            Sign In
+          </button>
+        )}
       </header>
  
-      {status === 'authenticated' ? (
+      {status === 'authenticated' || selectedTab !== 'landing' ? (
         <>
           {userInfo !== null ? (
             <main className="flex flex-col grow h-full flex-1 px-4 lg:px-12">
@@ -116,7 +153,7 @@ export default function App() {
           )}
         </>
       ) : (
-       <LandingPage />
+       <LandingPage setSelectedTab={setSelectedTab} />
       )}
     </>
   )

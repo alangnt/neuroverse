@@ -1,6 +1,9 @@
 import { signIn } from "next-auth/react";
 
+import { Dispatch, SetStateAction } from "react"
+
 import { LucideIcon, Github, ChevronRight, User, Users, MessageSquare } from 'lucide-react'
+import { TabValue } from "@/app/page";
 
 type Card = {
   icon: LucideIcon;
@@ -14,7 +17,11 @@ type PersonaCard = {
   color: string;
 }
 
-export default function LandingPage() {
+interface Props {
+  setSelectedTab: Dispatch<SetStateAction<TabValue>>;
+}
+
+export default function LandingPage({ setSelectedTab }: Props) {
   const cards: Card[] = [
     {
       icon: User,
@@ -63,14 +70,26 @@ export default function LandingPage() {
           <h3 className={'text-4xl font-semibold'}>Discover Different Sides of Yourself</h3>
           <p className={'text-xl text-gray-600 mb-12 px-8'}>Chat with AI-generated personas based on your personality. Get advice from your ambitious self, challenge your thinking with your logical self, or explore your creative side</p>
 
-          <button 
-            className={'flex items-center gap-2 w-fit border rounded border-gray-200 px-4 py-3 cursor-pointer bg-gray-900 text-gray-50 hover:bg-gray-800 transition-all duration-150'}
-            onClick={async () => { await signIn('github'); }}
-          >
-            <Github className={'w-4 h-4'} />
-            Sign In
-            <ChevronRight className={'w-4 h-4'} />
-          </button>
+          <div className={'flex space-x-4'}>
+            <button 
+              className={'flex items-center gap-2 w-fit border rounded border-gray-200 px-4 py-3 cursor-pointer bg-gray-900 text-gray-50 hover:bg-gray-800 transition-all duration-150'}
+              onClick={async () => { await signIn('github'); }}
+            >
+              <Github className={'w-4 h-4'} />
+              Sign In
+            </button>
+
+            <button 
+              className={'flex items-center gap-2 w-fit border rounded border-gray-200 px-4 py-3 cursor-pointer bg-gray-900 text-gray-50 hover:bg-gray-800 transition-all duration-150'}
+              onClick={() => setSelectedTab('chat')}
+            >
+              Try It Out
+            </button>
+          </div>
+
+          <div>
+            <p className={'text-sm text-red-800 text-center mt-4'}>Disclaimer: If you try NeuroVerse without an account, any data entered can be subject to a loss when refreshing the page</p>
+          </div>
         </section>
 
         <section className={'flex flex-col space-y-16 bg-gray-50 py-18 px-12'}>

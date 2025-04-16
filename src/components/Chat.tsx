@@ -11,7 +11,6 @@ interface Props {
   userInfo: User;
 }
 
-// TODO: Separate file with the types
 export type Message = {
   name?: string;
   role: 'user' | 'bot';
@@ -137,9 +136,7 @@ export default function Chat({ userInfo }: Props) {
   }
 
   useEffect(() => {
-    setTimeout(() => {
-      fetchMessages();
-    }, 1000)
+    fetchMessages();
   }, [persona]);
 
   useEffect(() => {
@@ -195,6 +192,10 @@ export default function Chat({ userInfo }: Props) {
               <p className="text-gray-800">{msg.content}</p>
             </div>
           ))}
+
+          {selectedPersonaMessages.length === 0 && (
+            <p className={'text-sm text-gray-400 text-center'}>No messages yet.</p>
+          )}
 
           <div ref={bottomRef} />
         </div>
