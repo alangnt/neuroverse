@@ -73,7 +73,7 @@ export default function App() {
 
         {status === 'authenticated' ? (
           <button 
-            className={'flex items-center gap-2 w-fit border rounded border-gray-200 px-3 py-2 cursor-pointer bg-gray-900 text-gray-50 hover:bg-gray-800 transition-all duration-150 md:absolute md:right-0 md:top-2'}
+            className={'flex items-center gap-2 w-fit border rounded border-gray-200 px-3 py-2 cursor-pointer bg-gray-900 text-gray-50 hover:bg-gray-800 transition-all duration-150 md:absolute right-2 md:top-2'}
             onClick={async () => { await signOut(); }}
           >
             <Github className={'w-4 h-4'} />
@@ -85,7 +85,7 @@ export default function App() {
       {status === 'authenticated' ? (
         <>
           {userInfo !== null ? (
-            <main className="flex flex-col grow h-full flex-1 max-w-[1280px]">
+            <main className="flex flex-col grow h-full flex-1 max-w-[1280px] place-self-center">
               <nav className={'flex bg-gray-100 rounded p-1 my-8'}>
                 {tabs.map((tab, index) => (
                   <div key={index} onClick={() => setSelectedTab(tab.value)} className={`

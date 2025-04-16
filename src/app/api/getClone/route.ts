@@ -50,9 +50,9 @@ export async function POST(req: NextRequest) {
       ]
     });
 
-    const [ambitiousPersona, analyticalPersona, shadowPersona, creativePersona, innerChildPersona, futurePersona, chaosPersona] = await Promise.all([
+    const [ambitiousPersona, indecisivePersona, shadowPersona, creativePersona, innerChildPersona, futurePersona, chaosPersona] = await Promise.all([
       groq.chat.completions.create(basePrompt("high-performing self. You prioritize bold decisions, rapid growth, and mastery.", "Motivational, direct, strategic")),
-      groq.chat.completions.create(basePrompt("analytical mind. You help assess choices based on risk, logic, and long-term impact.", "Technical, rational, cautious")),
+      groq.chat.completions.create(basePrompt("part that second-guesses everything. You overthink, weigh every option, and fear choosing the 'wrong' path.", "Nervous, introspective, tentative")),
       groq.chat.completions.create(basePrompt("inner skeptic. You notice cracks, dangers, and emotional stressors before they escalate.", "Realistic, cautionary, vulnerable")),
       groq.chat.completions.create(basePrompt("creative side. You bring color to routine and unlock innovative paths when logic feels stuck.", "Playful, curious, inspiring")),
       groq.chat.completions.create(basePrompt("inner child. You help me connect with feelings, joy, simplicity, and honesty.", "Warm, emotional, innocent")),
@@ -62,7 +62,7 @@ export async function POST(req: NextRequest) {
 
     const personas = [
       { name: "Astra", response: ambitiousPersona },
-      { name: "Echo", response: analyticalPersona },
+      { name: "Echo", response: indecisivePersona },
       { name: "Nox", response: shadowPersona },
       { name: "Iris", response: creativePersona },
       { name: "Nyra", response: innerChildPersona },

@@ -5,6 +5,7 @@ import { PlusCircle } from 'lucide-react'
 
 import { User } from '@/types/User'
 import { Persona } from '@/types/Bot';
+import Image from 'next/image';
 
 interface Props {
   userInfo: User;
@@ -25,13 +26,13 @@ export default function Chat({ userInfo }: Props) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const basePersonas: Omit<Persona, 'messages'>[] = [
-    { name: 'Astra', tone: 'Motivational, direct, strategic' }, 
-    { name: 'Echo', tone: 'Technical, rational, cautious' }, 
-    { name: 'Nox', tone: 'Realistic, cautionary, vulnerable' }, 
-    { name: 'Iris', tone: 'Playful, curious, inspiring' }, 
-    { name: 'Nyra', tone: 'Warm, emotional, innocent' }, 
-    { name: 'Mira', tone: 'Mature, grounded, guiding' }, 
-    { name: 'Flux', tone: 'Wild, humorous, thought-provoking' }
+    { name: 'Astra', tone: 'Motivational, direct, strategic', image: "/Astra.png" }, 
+    { name: 'Echo', tone: 'Nervous, introspective, tentative', image: "/Echo.png" }, 
+    { name: 'Nox', tone: 'Realistic, cautionary, vulnerable', image: "/Nox.png" }, 
+    { name: 'Iris', tone: 'Playful, curious, inspiring', image: "/Iris.png" }, 
+    { name: 'Nyra', tone: 'Warm, emotional, innocent', image: "/Nyra.png" }, 
+    { name: 'Mira', tone: 'Mature, grounded, guiding', image: "/Mira.png" }, 
+    { name: 'Flux', tone: 'Wild, humorous, thought-provoking', image: "/Flux.png" }
   ];
 
   const personas: Persona[] = basePersonas.map(p => ({
@@ -169,10 +170,16 @@ export default function Chat({ userInfo }: Props) {
 
       <article className="flex flex-col md:w-2/3 h-[calc(100vh-215px)] md:h-[calc(100vh-200px)] border rounded border-gray-200 md:sticky md:right-0 md:top-0">
         <div className={'border-b border-gray-200 p-4'}>
-          <p className={'text-xl font-semibold'}>{persona}</p>
-          <p className={'text-sm text-gray-500'}>
-            {personas.find(p => p.name === persona)?.tone}
-          </p>
+          <div className={'flex items-center justify-between'}>
+            <p className={'text-xl font-semibold'}>{persona}</p>
+            <p className={'text-sm text-gray-500'}>
+              {personas.find(p => p.name === persona)?.tone}
+            </p>
+          </div>
+         
+          <div>
+            <Image src={personas.find(p => p.name === persona)?.image || ''} alt={personas.find(p => p.name === persona)?.name || ''} width={100} height={100} />
+          </div>
         </div>
         
         <div className="flex flex-col grow p-4 overflow-y-auto">

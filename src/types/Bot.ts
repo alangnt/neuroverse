@@ -11,7 +11,7 @@ export type Bot =
 
 export type Tone =
   'Motivational, direct, strategic'
-  | 'Technical, rational, cautious'
+  | 'Nervous, introspective, tentative'
   | 'Realistic, cautionary, vulnerable'
   | 'Playful, curious, inspiring'
   | 'Warm, emotional, innocent'
@@ -21,5 +21,6 @@ export type Tone =
 export type Persona = {
   name: Bot;
   tone: Tone;
-  messages: Message[]
+  image: string;
+  messages: Message[];
 }
