@@ -64,7 +64,7 @@ export default function App() {
 
   return (
     <>
-      <header className={'flex flex-col items-center justify-center bg-background p-2 relative sticky top-0 z-10 border-b border-gray-200'}>
+      <header className={'flex flex-col items-center justify-center bg-background p-2 relative max-md:sticky max-md:top-0 z-10 border-b border-gray-200'}>
         <h1 className={'text-4xl font-bold text-gray-800'}>NeuroVerse</h1>
         <p className={'max-md:hidden'}>Speak with your own AI clones</p>
 
