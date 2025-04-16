@@ -1,6 +1,6 @@
 'use client'
 
-import { FormEvent, useEffect, useState } from 'react'
+import { FormEvent, useEffect, useState, useRef } from 'react'
 import { PlusCircle } from 'lucide-react'
 
 import { User } from '@/types/User'
@@ -24,6 +24,8 @@ export default function Chat({ userInfo }: Props) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [selectedPersonaMessages, setSelectedPersonaMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const bottomRef = useRef<HTMLDivElement | null>(null);
 
   const basePersonas: Omit<Persona, 'messages'>[] = [
     { name: 'Astra', tone: 'Motivational, direct, strategic', image: "/Astra.png" }, 
@@ -140,6 +142,10 @@ export default function Chat({ userInfo }: Props) {
     }, 1000)
   }, [persona]);
 
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [selectedPersonaMessages]);
+
   return (
     <section className={'flex max-md:flex-col-reverse max-md:gap-4 grow md:space-x-4 w-full relative mb-8'}>
       <article className='flex flex-col space-y-4 md:w-1/3'>
@@ -189,6 +195,8 @@ export default function Chat({ userInfo }: Props) {
               <p className="text-gray-800">{msg.content}</p>
             </div>
           ))}
+
+          <div ref={bottomRef} />
         </div>
 
         <form onSubmit={handleSubmit} className={'flex space-x-4 p-4'}>

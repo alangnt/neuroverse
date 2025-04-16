@@ -30,7 +30,7 @@ export default function App() {
       value: 'chat'
     },
     {
-      name: 'Settings',
+      name: 'Informations',
       value: 'settings'
     }
   ]
@@ -85,7 +85,7 @@ export default function App() {
       {status === 'authenticated' ? (
         <>
           {userInfo !== null ? (
-            <main className="flex flex-col grow h-full flex-1 max-w-[1280px] place-self-center">
+            <main className="flex flex-col grow h-full flex-1 px-4 lg:px-12">
               <nav className={'flex bg-gray-100 rounded p-1 my-8'}>
                 {tabs.map((tab, index) => (
                   <div key={index} onClick={() => setSelectedTab(tab.value)} className={`

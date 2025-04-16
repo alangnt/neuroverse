@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
       messages: [
         {
           role: "user",
-          content: `You are now ${botName}, my ${vibe}. You'll answer all my questions with this tone : ${tone}. Don't make the answers too long.
+          content: `You are now ${botName}, my ${vibe}. You'll answer all my questions with this tone : ${tone}. Don't make the answers too long and track the language if possible.
     Here is everything to know about me: ${JSON.stringify(userInfo, null, 2)}
     Here is the entire history of our messages in order: ${JSON.stringify(documents, null, 2)}
     Now here's my question: ${message}`
