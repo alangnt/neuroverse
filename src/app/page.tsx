@@ -66,11 +66,6 @@ export default function App() {
 	}
 
   useEffect(() => {
-    if (status === 'authenticated') return setSelectedTab('chat');
-    return setSelectedTab('landing');
-  })
-
-  useEffect(() => {
     if (!session) {
       const stored = localStorage.getItem("guestEmail");
       if (stored) {
