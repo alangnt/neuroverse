@@ -137,7 +137,7 @@ export default function Chat({ userInfo }: Props) {
     setTimeout(() => {
       fetchMessages();
     }, 1000)
-  }, []);
+  }, [persona]);
 
   return (
     <section className={'flex max-md:flex-col-reverse max-md:gap-4 grow md:space-x-4 w-full relative mb-8'}>

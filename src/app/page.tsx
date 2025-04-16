@@ -21,7 +21,7 @@ export type TabValue = 'chat' | 'settings' | 'basicInfo' | 'interests' | 'person
 export default function App() {
   const {data: session, status} = useSession();
 
-  const [selectedTab, setSelectedTab] = useState<TabValue>('settings');
+  const [selectedTab, setSelectedTab] = useState<TabValue>('chat');
 
   const tabs: Tab[] = [
     {
