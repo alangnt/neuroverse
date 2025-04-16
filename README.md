@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🌌 NeuroVerse
 
-## Getting Started
+**Navigate your life with AI-powered versions of yourself.**
 
-First, run the development server:
+NeuroVerse is an experimental productivity tool where emotional AI personas - like Ambitious You, Creative You, and Future You — help you explore your goals, make decisions, and reflect on your path through different mindsets.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Each digital persona uses your past context, goals, and message history to respond with a tone and perspective that mirrors your inner multiverse.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🧠 Key Features
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **AI Personas**  
+  7 custom-designed personas (Astra, Iris, Nox, etc.), each with unique tone and cognitive approach.
 
-## Learn More
+- **Dynamic Prompt Injection**  
+  Your personal data (message history, user info, current question) is used to generate rich, context-aware replies.
 
-To learn more about Next.js, take a look at the following resources:
+- **Multi-Persona Replies**  
+  Ask a question once, and receive multiple answers — each from a different “you.”
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **MongoDB Message Storage**  
+  Saves all user + bot interactions, linked by persona, for future reflection and AI memory.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 🧬 Tech Stack
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+| Layer           | Stack |
+|------------------|--------------------------|
+| **Frontend**     | Next.js 15 + TailwindCSS + App Router |
+| **Backend**      | Next.js API routes (`/app/api`) using TypeScript |
+| **Database**     | MongoDB (with native driver + `ObjectId`) |
+| **AI Layer**     | [Groq SDK](https://groq.com/) via Vercel x Groq integration using **LLaMA 3 70B** |
+| **Hosting**      | Vercel |
+| **Prompt Strategy** | Persona-based system prompts + message context injection |
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## 🧪 Personas
+
+| Name   | Role              | Tone                     |
+|--------|-------------------|--------------------------|
+| Astra  | Ambitious Self    | Motivational, strategic  |
+| Echo   | Indecisive Self   | Nervous, hesitant        |
+| Nox    | Shadow/Skeptic    | Cautionary, realistic    |
+| Iris   | Creative Self     | Playful, expressive      |
+| Nyra   | Inner Child       | Warm, joyful             |
+| Mira   | Future Self       | Grounded, wise           |
+| Flux   | Chaos Engine      | Wild, unorthodox         |
+
+---
+
+## 🔧 Example Prompt Logic
+
+```ts
+content: `
+You are now ${botName}, my ${vibe}. 
+You’ll answer with this tone: ${tone}. 
+Don't make answers too long. 
+Here’s everything to know about me: ${userInfo}
+Here’s the message history: ${documents}
+Now answer this question: ${message}
+`
