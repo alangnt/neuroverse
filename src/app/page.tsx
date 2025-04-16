@@ -118,42 +118,50 @@ export default function App() {
           </button>
         )}
       </header>
- 
-      {selectedTab !== 'landing' ? (
-        <>
-          {userInfo !== null ? (
-            <main className="flex flex-col grow h-full flex-1 px-4 lg:px-12">
-              <nav className={'flex bg-gray-100 rounded p-1 my-8'}>
-                {tabs.map((tab, index) => (
-                  <div key={index} onClick={() => setSelectedTab(tab.value)} className={`
-                    flex items-center justify-center text-center w-full p-1 cursor-pointer transition-all duration-250 
-                    ${selectedTab === tab.value ? 'bg-white text-gray-600 rounded' : 'text-gray-400'}
-                  `}>
-                    <h2 className={'font-semibold'}>{tab.name}</h2>
-                  </div>
-                ))}
-              </nav>
 
-              <section className='flex-grow flex flex-col w-full h-full'>
-                {selectedTab === 'chat' ? (
-                  <>
-                    <Chat userInfo={userInfo!} />
-                  </>
-                ) : (
-                  <>
-                    <Settings userInfo={userInfo!} />
-                  </>
-                )}
-              </section>
-            </main>
-          ) : (
-            <div className='flex justify-center text-center p-4 w-full'>
-              <p>Loading account data...</p>
-            </div>
-          )}
+      {status === 'loading' ? (
+        <>
+          <p className='text-lg text-gray-400 text-center'>Personas are waking up...</p>
         </>
       ) : (
-       <LandingPage setSelectedTab={setSelectedTab} status={status} />
+        <>
+          {selectedTab !== 'landing' ? (
+            <>
+              {userInfo !== null ? (
+                <main className="flex flex-col grow h-full flex-1 px-4 lg:px-12">
+                  <nav className={'flex bg-gray-100 rounded p-1 my-8'}>
+                    {tabs.map((tab, index) => (
+                      <div key={index} onClick={() => setSelectedTab(tab.value)} className={`
+                        flex items-center justify-center text-center w-full p-1 cursor-pointer transition-all duration-250 
+                        ${selectedTab === tab.value ? 'bg-white text-gray-600 rounded' : 'text-gray-400'}
+                      `}>
+                        <h2 className={'font-semibold'}>{tab.name}</h2>
+                      </div>
+                    ))}
+                  </nav>
+    
+                  <section className='flex-grow flex flex-col w-full h-full'>
+                    {selectedTab === 'chat' ? (
+                      <>
+                        <Chat userInfo={userInfo!} />
+                      </>
+                    ) : (
+                      <>
+                        <Settings userInfo={userInfo!} />
+                      </>
+                    )}
+                  </section>
+                </main>
+              ) : (
+                <div className='flex justify-center text-center p-4 w-full'>
+                  <p>Loading account data...</p>
+                </div>
+              )}
+            </>
+          ) : (
+          <LandingPage setSelectedTab={setSelectedTab} status={status} />
+          )}
+        </>
       )}
     </>
   )
