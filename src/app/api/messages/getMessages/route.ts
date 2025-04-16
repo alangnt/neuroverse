@@ -10,18 +10,17 @@ export async function GET(req: NextRequest) {
 
     const url = new URL(req.url);
     const userId = url.searchParams.get('id');
-    const botName = url.searchParams.get('botName');
 
-    if (!userId || !botName) {
+    if (!userId) {
       return NextResponse.json(
-        { message: "All fields are required" },
+        { message: "UserId is required" },
         { status: 400 }
       );
     }
 
     const objectId = new ObjectId(userId);
 
-    const documents = await collection.find({ user: objectId, botName: botName }).toArray();
+    const documents = await collection.find({ user: objectId }).toArray();
 
     return NextResponse.json({ message: "Success", data: documents });
   } catch (error) {

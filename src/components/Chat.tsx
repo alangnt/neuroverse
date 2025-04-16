@@ -4,7 +4,7 @@ import { FormEvent, useEffect, useState } from 'react'
 import { PlusCircle } from 'lucide-react'
 
 import { User } from '@/types/User'
-import { Bot } from '@/types/Bot';
+import { Persona } from '@/types/Bot';
 
 interface Props {
   userInfo: User;
@@ -19,16 +19,31 @@ export type Message = {
 }
 
 export default function Chat({ userInfo }: Props) {
-  const personas: Bot[] = ['Astra', 'Echo', 'Nox', 'Iris', 'Nyra', 'Mira', 'Flux'];
-
   const [message, setMessage] = useState<string>('');
   const [messages, setMessages] = useState<Message[]>([]);
+  const [selectedPersonaMessages, setSelectedPersonaMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [persona, setPersona] = useState<string>(personas[0]);
+
+  const basePersonas: Omit<Persona, 'messages'>[] = [
+    { name: 'Astra', tone: 'Motivational, direct, strategic' }, 
+    { name: 'Echo', tone: 'Technical, rational, cautious' }, 
+    { name: 'Nox', tone: 'Realistic, cautionary, vulnerable' }, 
+    { name: 'Iris', tone: 'Playful, curious, inspiring' }, 
+    { name: 'Nyra', tone: 'Warm, emotional, innocent' }, 
+    { name: 'Mira', tone: 'Mature, grounded, guiding' }, 
+    { name: 'Flux', tone: 'Wild, humorous, thought-provoking' }
+  ];
+
+  const personas: Persona[] = basePersonas.map(p => ({
+    ...p,
+    messages: messages.filter(msg => msg.botName === p.name)
+  }));
+
+  const [persona, setPersona] = useState<string>(personas[0].name);
 
   const fetchMessages = async () => {
     try {
-      const res = await fetch(`/api/messages/getMessages?id=${userInfo._id}&botName=${persona}`, {
+      const res = await fetch(`/api/messages/getMessages?id=${userInfo._id}`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' }
       });
@@ -37,6 +52,7 @@ export default function Chat({ userInfo }: Props) {
 
       const data = await res.json();
       setMessages(data.data);
+      setSelectedPersonaMessages(data.data.filter((msg: Message) => msg.botName === persona));
     } catch (err) {
       console.error('Error retrieving messages:', err);
     }
@@ -49,6 +65,15 @@ export default function Chat({ userInfo }: Props) {
       message: message,
       userInfo
     }
+
+    const newUserMessage: Message = {
+      role: 'user',
+      content: message,
+      botName: persona,
+      name: userInfo.name,
+    };
+
+    setSelectedPersonaMessages((prev) => [...prev, newUserMessage]);
 
     try {
       const response = await fetch('/api/messages/postMessage', {
@@ -103,20 +128,20 @@ export default function Chat({ userInfo }: Props) {
     } catch (error) {
       console.error(error);
     } finally {
-      setTimeout(() => {
-        setMessage('');
-        setIsLoading(false);
-      }, 1000);
+      setMessage('');
+      setIsLoading(false);
     }
   }
 
   useEffect(() => {
-    fetchMessages();
+    setTimeout(() => {
+      fetchMessages();
+    }, 1000)
   }, [persona]);
 
   return (
-    <section className={'flex space-x-4 w-full overflow-hidden relative'}>
-      <article className='flex flex-col space-y-4 w-1/3'>
+    <section className={'flex max-md:flex-col-reverse max-md:gap-4 grow md:space-x-4 w-full relative mb-8'}>
+      <article className='flex flex-col space-y-4 md:w-1/3'>
         <div className={'flex justify-between items-center space-x-4'}>
           <h3 className={'text-xl font-semibold text-gray-700'}>Your Personas</h3>
           <button className={'flex items-center space-x-2 border rounded border-gray-200 px-3 py-1 cursor-pointer hover:bg-gray-50 transition-all duration-150'}>
@@ -125,22 +150,33 @@ export default function Chat({ userInfo }: Props) {
           </button>
         </div>
 
-        <div className={'flex flex-col space-y-4'}>
+        <div className={'grid grid-cols-3 max-md:gap-4 md:flex md:flex-col md:space-y-4'}>
           {personas.map((pers, index) => (
             <div
             key={index}
-            onClick={() => setPersona(pers)}
-            className={`w-full border rounded border-gray-200 cursor-pointer hover:bg-gray-50 transition-all duration-150 p-4 ${pers === persona ? 'bg-gray-100' : ''}`}
+            onClick={() => setPersona(pers.name)}
+            className={`w-full border rounded cursor-pointer hover:bg-gray-50 transition-all duration-150 p-4 ${pers.name === persona ? 'bg-gray-100 border-gray-400' : ' border-gray-200'}`}
             >
-              <p>{pers}</p>
+              <p className={'font-semibold'}>{pers.name}</p>
+              <p className="text-xs text-gray-500">{pers.tone}</p>
+              <p className="text-xs text-gray-500 italic mt-2 truncate">
+                {pers.messages.length > 0 ? pers.messages[pers.messages.length - 1].content : 'No messages yet.'}
+              </p>
             </div>
           ))}
         </div>
       </article>
 
-      <article className={'flex flex-col w-2/3 h-[70vh] border rounded border-gray-200'}>
-        <div className={'flex flex-col grow p-4 overflow-y-auto'}>
-          {messages.map((msg, index) => (
+      <article className="flex flex-col md:w-2/3 h-[calc(100vh-215px)] md:h-[calc(100vh-200px)] border rounded border-gray-200 md:sticky md:right-0 md:top-0">
+        <div className={'border-b border-gray-200 p-4'}>
+          <p className={'text-xl font-semibold'}>{persona}</p>
+          <p className={'text-sm text-gray-500'}>
+            {personas.find(p => p.name === persona)?.tone}
+          </p>
+        </div>
+        
+        <div className="flex flex-col grow p-4 overflow-y-auto">
+          {selectedPersonaMessages.map((msg, index) => (
             <div key={index} className={`mb-4 p-3 rounded ${msg.role === 'user' ? 'bg-blue-100 text-left' : 'bg-green-100 text-right'}`}>
               <p className="text-sm text-gray-600 italic">{msg.role === 'user' ? 'You' : msg.name || msg.botName ? msg.botName : 'Bot'}</p>
               <p className="text-gray-800">{msg.content}</p>
