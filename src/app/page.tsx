@@ -24,7 +24,7 @@ export default function App() {
 
   const [publicUser, setPublicUser] = useState<string>('');
 
-  const [selectedTab, setSelectedTab] = useState<TabValue>(status === 'authenticated' ? 'chat' : 'landing');
+  const [selectedTab, setSelectedTab] = useState<TabValue>('landing');
 
   const tabs: Tab[] = [
     {
@@ -64,6 +64,11 @@ export default function App() {
 
     setUserInfo(result.data);
 	}
+
+  useEffect(() => {
+    if (status === 'authenticated') return setSelectedTab('chat');
+    return setSelectedTab('landing');
+  })
 
   useEffect(() => {
     if (!session) {
