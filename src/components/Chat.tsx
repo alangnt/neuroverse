@@ -169,8 +169,8 @@ export default function Chat({ userInfo }: Props) {
       </article>
 
       <article className="flex flex-col md:w-2/3 h-[calc(100vh-215px)] md:h-[calc(100vh-200px)] border rounded border-gray-200 md:sticky md:right-0 md:top-0">
-        <div className={'border-b border-gray-200 p-4'}>
-          <div className={'flex items-center justify-between'}>
+        <div className={'flex items-center justify-between border-b border-gray-200 p-4'}>
+          <div>
             <p className={'text-xl font-semibold'}>{persona}</p>
             <p className={'text-sm text-gray-500'}>
               {personas.find(p => p.name === persona)?.tone}
@@ -178,7 +178,7 @@ export default function Chat({ userInfo }: Props) {
           </div>
          
           <div>
-            <Image src={personas.find(p => p.name === persona)?.image || ''} alt={personas.find(p => p.name === persona)?.name || ''} width={100} height={100} />
+            <Image src={personas.find(p => p.name === persona)?.image || ''} alt={personas.find(p => p.name === persona)?.name || ''} width={50} height={50} />
           </div>
         </div>
         
