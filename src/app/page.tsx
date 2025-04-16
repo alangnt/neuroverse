@@ -4,11 +4,12 @@ import Settings from '@/components/Settings'
 import Chat from '@/components/Chat'
 
 import { useState, useEffect } from 'react'
-import { useSession, signIn, signOut } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 
 import { Github } from 'lucide-react'
 
 import { User } from '@/types/User';
+import LandingPage from '@/components/LandingPage';
 
 // TODO: Export to a separate file
 export type Tab = {
@@ -66,7 +67,9 @@ export default function App() {
     <>
       <header className={'flex flex-col items-center justify-center bg-background p-2 relative max-md:sticky max-md:top-0 z-10 border-b border-gray-200'}>
         <h1 className={'text-4xl font-bold text-gray-800'}>NeuroVerse</h1>
-        <p className={'max-md:hidden'}>Speak with your own AI clones</p>
+        {status === 'authenticated' ? (
+          <p className={'max-md:hidden'}>Speak with your own AI clones</p>
+        ) : null}
 
         {status === 'authenticated' ? (
           <button 
@@ -76,44 +79,45 @@ export default function App() {
             <Github className={'w-4 h-4'} />
             Sign Out
           </button>
-        ) : (
-          <button 
-            className={'flex items-center gap-2 w-fit border rounded border-gray-200 px-3 py-2 cursor-pointer bg-gray-900 text-gray-50 hover:bg-gray-800 transition-all duration-150 md:absolute md:right-0 md:top-2'}
-            onClick={async () => { await signIn('github'); }}
-          >
-            <Github className={'w-4 h-4'} />
-              Sign In
-          </button>
-        )}
+        ) : null}
       </header>
  
-      {userInfo !== null ? (
-        <main className="flex flex-col grow h-full flex-1">
-          <nav className={'flex bg-gray-100 rounded p-1 my-8'}>
-            {tabs.map((tab, index) => (
-              <div key={index} onClick={() => setSelectedTab(tab.value)} className={`
-                flex items-center justify-center text-center w-full p-1 cursor-pointer transition-all duration-250 
-                ${selectedTab === tab.value ? 'bg-white text-gray-600 rounded' : 'text-gray-400'}
-              `}>
-                <h2 className={'font-semibold'}>{tab.name}</h2>
-              </div>
-            ))}
-          </nav>
+      {status === 'authenticated' ? (
+        <>
+          {userInfo !== null ? (
+            <main className="flex flex-col grow h-full flex-1 max-w-[1280px]">
+              <nav className={'flex bg-gray-100 rounded p-1 my-8'}>
+                {tabs.map((tab, index) => (
+                  <div key={index} onClick={() => setSelectedTab(tab.value)} className={`
+                    flex items-center justify-center text-center w-full p-1 cursor-pointer transition-all duration-250 
+                    ${selectedTab === tab.value ? 'bg-white text-gray-600 rounded' : 'text-gray-400'}
+                  `}>
+                    <h2 className={'font-semibold'}>{tab.name}</h2>
+                  </div>
+                ))}
+              </nav>
 
-          <section className='flex-grow flex flex-col w-full h-full'>
-            {selectedTab === 'chat' ? (
-              <>
-                <Chat userInfo={userInfo!} />
-              </>
-            ) : (
-              <>
-                <Settings userInfo={userInfo!} />
-              </>
-            )}
-          </section>
-        </main>
-      ) : null}
-      
+              <section className='flex-grow flex flex-col w-full h-full'>
+                {selectedTab === 'chat' ? (
+                  <>
+                    <Chat userInfo={userInfo!} />
+                  </>
+                ) : (
+                  <>
+                    <Settings userInfo={userInfo!} />
+                  </>
+                )}
+              </section>
+            </main>
+          ) : (
+            <div className='flex justify-center text-center p-4 w-full'>
+              <p>Loading account data...</p>
+            </div>
+          )}
+        </>
+      ) : (
+       <LandingPage />
+      )}
     </>
   )
 }
