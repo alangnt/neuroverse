@@ -24,7 +24,7 @@ export default function App() {
 
   const [publicUser, setPublicUser] = useState<string>('');
 
-  const [selectedTab, setSelectedTab] = useState<TabValue>('landing');
+  const [selectedTab, setSelectedTab] = useState<TabValue>(status === 'authenticated' ? 'chat' : 'landing');
 
   const tabs: Tab[] = [
     {
@@ -119,7 +119,7 @@ export default function App() {
         )}
       </header>
  
-      {status === 'authenticated' || selectedTab !== 'landing' ? (
+      {selectedTab !== 'landing' ? (
         <>
           {userInfo !== null ? (
             <main className="flex flex-col grow h-full flex-1 px-4 lg:px-12">
@@ -153,7 +153,7 @@ export default function App() {
           )}
         </>
       ) : (
-       <LandingPage setSelectedTab={setSelectedTab} />
+       <LandingPage setSelectedTab={setSelectedTab} status={status} />
       )}
     </>
   )
