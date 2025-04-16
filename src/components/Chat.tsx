@@ -177,7 +177,7 @@ export default function Chat({ userInfo }: Props) {
             </p>
           </div>
          
-          <div>
+          <div className='rounded-full overflow-hidden'>
             <Image src={personas.find(p => p.name === persona)?.image || ''} alt={personas.find(p => p.name === persona)?.name || ''} width={50} height={50} />
           </div>
         </div>
