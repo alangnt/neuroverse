@@ -6,6 +6,8 @@ NeuroVerse is an experimental productivity tool where emotional AI personas - li
 
 Each digital persona uses your past context, goals, and message history to respond with a tone and perspective that mirrors your inner multiverse.
 
+This project was made as part of the [Next.js]([https://groq.com/](https://nextjs.org/)) hackathon that took part from April 7 to April 17, 2025.
+
 ---
 
 ## 🧠 Key Features
