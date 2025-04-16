@@ -31,6 +31,12 @@ export async function POST(req: NextRequest) {
 		
 		const result = await collection.insertOne(newUser);
 
+		if (!result) {
+			return NextResponse.json(
+				{ message: "Error adding the new user" },
+			);
+		}
+
 		// Then fetch data again
 		const fetchUser = await collection.findOne({ email: email });
 		
