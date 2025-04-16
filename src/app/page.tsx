@@ -37,7 +37,7 @@ export default function App() {
   const [userInfo, setUserInfo] = useState<User | null>(null);
 
   const fetchUserProfile = async () => {
-		const data = { email: session?.user?.email };
+		const data = { name: session?.user?.name, email: session?.user?.email, image: session?.user?.image };
 		
 		const response = await fetch("/api/users/getUser", {
 			method: "POST",
