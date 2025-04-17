@@ -2,7 +2,7 @@
 
 **Navigate your life with AI-powered versions of yourself.**
 
-NeuroVerse is an experimental productivity tool where emotional AI personas - like Ambitious You, Creative You, and Future You — help you explore your goals, make decisions, and reflect on your path through different mindsets.
+NeuroVerse is an experimental productivity tool where emotional AI personas like Ambitious You, Creative You, and Future You help you explore your goals, make decisions, and reflect on your path through different mindsets.
 
 Each digital persona uses your past context, goals, and message history to respond with a tone and perspective that mirrors your inner multiverse.
 
