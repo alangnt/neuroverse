@@ -19,7 +19,7 @@ This project was made as part of the [Next.js](https://nextjs.org/) hackathon th
   Your personal data (message history, user info, current question) is used to generate rich, context-aware replies.
 
 - **Multi-Persona Replies**  
-  Ask a question once, and receive multiple answers — each from a different “you.”
+  Ask a question once, and receive multiple answers, each from a different “you.”
 
 - **MongoDB Message Storage**  
   Saves all user + bot interactions, linked by persona, for future reflection and AI memory.
